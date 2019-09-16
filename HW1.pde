@@ -2,12 +2,13 @@ import java.util.Random;
 
 PImage img;
 PImage bg;
+PImage end;
 
 int leafCount = 0;
 boolean even = true;
 
 //straight falling leaves
-Leaf leaf;
+Leaf leaf1;
 Leaf leaf2;
 
 //Zig Zag leaf
@@ -23,46 +24,54 @@ public class Leaf{
   int y;
   int x;
   boolean clicked;
+  String name;
   
-  public Leaf(int x, int y){
+  public Leaf(int x, int y, String name){
     this.x = x;
     this.y = y;
+    this.name = name;
     clicked = false;
   }
 }
 
 void setup() {
-  frameRate(4);
+  frameRate(1);
   size(1076, 636, P3D);
   img = loadImage("dry_leaf08_diff.png");
   bg = loadImage("Fall_background.PNG");
+  end = loadImage("success.png");
   createLeaves();
 }
 
 void createLeaves(){
-  leaf = new Leaf(0, 0);
-  leaf2 = new Leaf(100, 0);
-  leaf3 = new Leaf(300, 0);
-  leaf4 = new Leaf(500, 0);
+  leaf1 = new Leaf(0, 0, "leaf1");
+  leaf2 = new Leaf(100, 0, "leaf2");
+  leaf3 = new Leaf(300, 0, "leaf3");
+  leaf4 = new Leaf(500, 0, "leaf4");
 }
 
 void draw() {
   if(leafCount == 50){
      //Game ends. Show end screen 
+     image(end, 0, 0, end.width, end.height);
+     noLoop();
+     
   }
   
   background(bg);
-  drawLeaf(leaf.x, leaf.y*10, leaf);
-  /*
+  
+  //TODO change back to 10
   //Level 1: Straight falling leaves
   if(leafCount < 10){
-    genericStraightFall(leaf);
+    genericStraightFall(leaf1);
     genericStraightFall(leaf2);
     zigZagFall(leaf3);
     windyLeaf(leaf4);
   }
   //Level 2: Straight falling and zig zag
   else if(leafCount >= 10 && leafCount < 20){
+    
+    
     
   }
   //Level 3: Zig Zag and acorn
@@ -77,7 +86,7 @@ void draw() {
   else if(leafCount >= 40){
     
   }
-  */
+  
 }
 
 void genericStraightFall(Leaf leaf){
@@ -87,6 +96,7 @@ void genericStraightFall(Leaf leaf){
     drawLeaf(leaf.x, leaf.y*10, leaf);
   }else{
     leaf.y = 0;
+    leaf.clicked = false;
   }
   leaf.y++;
   
@@ -120,6 +130,7 @@ void zigZagFall(Leaf leaf){
   //Goes to the top on next iteration
   else{
     leaf.y = 0;
+    leaf.clicked = false;
   }
     
   leaf.y++;
@@ -156,6 +167,7 @@ void windyLeaf(Leaf leaf){
   //Goes to the top on next iteration
   else{
     leaf.y = 0;
+    leaf.clicked = false;
   }
     
   leaf.y++;
@@ -168,8 +180,13 @@ void drawLeaf(int x, int y, Leaf leaf){
     //currently being clicked?
     boolean xRange = (mouseX >= x) && (mouseX <= (x + (img.width / 8)));
     boolean yRange = (mouseY >= x) && (mouseY <= (x + (img.height / 8)));
+    /*
+    System.out.println("What is mouse pressed " + mousePressed);
+    System.out.println("What is xRange " + xRange);
+    System.out.println("What is yRange " + yRange);
+    */
     if(mousePressed == true && xRange && yRange){
-      System.out.println("Clicked");
+      System.out.println("Clicked " + leaf.name);
       leafCount++;
       System.out.println("Leaf Count " + leafCount);
   

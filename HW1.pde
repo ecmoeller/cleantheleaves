@@ -6,19 +6,28 @@ PImage bg;
 int leafCount = 0;
 boolean even = true;
 
+//straight falling leaves
 Leaf leaf;
 Leaf leaf2;
+
+//Zig Zag leaf
 Leaf leaf3;
+
+//Windy Leaves
 Leaf leaf4;
+Leaf leaf5;
+
 
 public class Leaf{
   //Leaf starting position
   int y;
   int x;
+  boolean clicked;
   
   public Leaf(int x, int y){
     this.x = x;
     this.y = y;
+    clicked = false;
   }
 }
 
@@ -43,37 +52,39 @@ void draw() {
   }
   
   background(bg);
-  
-  //Level 1
+  drawLeaf(leaf.x, leaf.y*10, leaf);
+  /*
+  //Level 1: Straight falling leaves
   if(leafCount < 10){
     genericStraightFall(leaf);
     genericStraightFall(leaf2);
     zigZagFall(leaf3);
     windyLeaf(leaf4);
   }
-  //Level 2
+  //Level 2: Straight falling and zig zag
   else if(leafCount >= 10 && leafCount < 20){
     
   }
-  //Level 3
+  //Level 3: Zig Zag and acorn
   else if(leafCount >= 20 && leafCount < 30){
     
   }
-  //Level 4
+  //Level 4: Zig Zag and Windy, and acorns
   else if(leafCount >= 30 && leafCount < 40){
     
   }
-  //Level 5
+  //Level 5: Windy and acorns
   else if(leafCount >= 40){
     
   }
+  */
 }
 
 void genericStraightFall(Leaf leaf){
   
   //Leaf falls straight down
   if(leaf.y < 60){
-    drawLeaf(leaf.x, leaf.y*10);
+    drawLeaf(leaf.x, leaf.y*10, leaf);
   }else{
     leaf.y = 0;
   }
@@ -91,18 +102,18 @@ void zigZagFall(Leaf leaf){
   if(leaf.y < 60){
     //starting place
     if(leaf.y == 0){
-      drawLeaf(leaf.x, leaf.y);
+      drawLeaf(leaf.x, leaf.y, leaf);
     }
     //zig
     else if(even){
       //Go to the left
-      drawLeaf(leaf.x - zig, leaf.y*5);
+      drawLeaf(leaf.x - zig, leaf.y*5, leaf);
      
     }
     //zag
     else{
       //Go to the right
-      drawLeaf(leaf.x + zig, leaf.y*5);
+      drawLeaf(leaf.x + zig, leaf.y*5, leaf);
       
     }
   }
@@ -126,18 +137,18 @@ void windyLeaf(Leaf leaf){
   if(leaf.y < 60){
     //starting place
     if(leaf.y == 0){
-      drawLeaf(leaf.x, leaf.y);
+      drawLeaf(leaf.x, leaf.y, leaf);
     }
     //zig
     else if(even){
       //Go to the left
-      drawLeaf(leaf.x - rand_int1, leaf.y*rand_int2);
+      drawLeaf(leaf.x - rand_int1, leaf.y*rand_int2, leaf);
       even = false;
     }
     //zag
     else{
       //Go to the right
-      drawLeaf(leaf.x - rand_int1, leaf.y*rand_int2);
+      drawLeaf(leaf.x - rand_int1, leaf.y*rand_int2, leaf);
       even = true;
       
     }
@@ -151,10 +162,23 @@ void windyLeaf(Leaf leaf){
    
 }
 
-void drawLeaf(int x, int y){
-  pushMatrix();
-  translate(x, y);
-  image(img, 0, 0, img.width / 8, img.height / 8);
-  popMatrix();
+void drawLeaf(int x, int y, Leaf leaf){
+  //Hasn't been clicked before
+  if(!leaf.clicked){
+    //currently being clicked?
+    boolean xRange = (mouseX >= x) && (mouseX <= (x + (img.width / 8)));
+    boolean yRange = (mouseY >= x) && (mouseY <= (x + (img.height / 8)));
+    if(mousePressed == true && xRange && yRange){
+      System.out.println("Clicked");
+      leafCount++;
+      System.out.println("Leaf Count " + leafCount);
+  
+    }else{
+      pushMatrix();
+      translate(x, y);
+      image(img, 0, 0, img.width / 8, img.height / 8);
+      popMatrix();
+    }
+  }
   
 }

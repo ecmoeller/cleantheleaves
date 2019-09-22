@@ -6,6 +6,7 @@ PImage end;
 
 int leafCount = 0;
 boolean even = true;
+double timeSinceAnimation = 0;
 
 //straight falling leaves
 Leaf leaf1;
@@ -41,6 +42,8 @@ void setup() {
   bg = loadImage("Fall_background.PNG");
   end = loadImage("success.png");
   createLeaves();
+  startTime = millis();
+  
 }
 
 void createLeaves(){
@@ -192,6 +195,7 @@ void drawLeaf(int x, int y, Leaf leaf){
   
     }else{
       pushMatrix();
+      //insert lerp here I think
       translate(x, y);
       image(img, 0, 0, img.width / 8, img.height / 8);
       popMatrix();
